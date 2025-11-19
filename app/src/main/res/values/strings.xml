@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">SprintYou</string>
+    <string name="app_name">Sprint yoU</string>
+
+    <!-- Goal Setting -->
+    <string name="goal_prompt">어떤 작은 목표를 달성해볼까요?</string>
+    <string name="goal_subtitle">최대 30자까지 입력해 주세요.</string>
+    <string name="goal_hint">예: 책 3페이지 읽기</string>
+    <string name="goal_tip">준비하기를 누르면 시간 설정 화면으로 이동합니다.</string>
+    <string name="action_ready">준비하기</string>
+    <string name="desc_history">성공 기록 보기</string>
+    <string name="toast_goal_required">먼저 목표를 입력해 주세요.</string>
+
+    <!-- Setup -->
+    <string name="setup_header">집중할 시간을 정해요</string>
+    <string name="setup_time_format">%02d:00</string>
+    <string name="action_start_sprint">스프린트 시작</string>
+
+    <!-- Timer -->
+    <string name="timer_remaining_format">%1$02d:%2$02d</string>
+    <string name="action_complete">완료!</string>
+    <string name="dialog_quit_title">중단할까요?</string>
+    <string name="dialog_quit_message">기록이 저장되지 않고 목표 설정 화면으로 돌아갑니다.</string>
+    <string name="dialog_quit_positive">그만두기</string>
+    <string name="dialog_quit_negative">계속하기</string>
+    <string name="toast_success_saved">성공! 기록을 저장했어요.</string>
+
+    <!-- History -->
+    <string name="history_title">성공 기록</string>
+    <string name="empty_history">아직 성공 기록이 없어요.</string>
+    <string name="desc_back">뒤로 가기</string>
 </resources>
