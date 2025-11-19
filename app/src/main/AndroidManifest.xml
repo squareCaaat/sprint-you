@@ -12,7 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SprintYou">
         <activity
-            android:name=".MainActivity"
+            android:name="com.termproject.sprintyou.ui.history.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.termproject.sprintyou.ui.timer.TimerActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.termproject.sprintyou.ui.setup.SetupActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.termproject.sprintyou.ui.goal.GoalSettingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
