@@ -11,6 +11,3 @@ import androidx.room.RoomDatabase
 abstract class SprintDatabase : RoomDatabase() {
     abstract fun sprintRecordDao(): SprintRecordDao
 }
-
-
-

@@ -175,4 +175,3 @@ class TimerActivity : AppCompatActivity() {
         private const val TICK_INTERVAL = 1000L
     }
 }
-

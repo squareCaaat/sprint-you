@@ -93,6 +93,3 @@
         app:layout_constraintTop_toBottomOf="@id/btn_ready" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-

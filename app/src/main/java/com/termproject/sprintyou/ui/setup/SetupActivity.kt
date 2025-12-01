@@ -58,4 +58,3 @@ class SetupActivity : AppCompatActivity() {
         private const val MINUTES_DEFAULT = 5
     }
 }
-

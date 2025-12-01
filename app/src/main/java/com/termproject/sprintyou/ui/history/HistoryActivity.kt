@@ -52,4 +52,3 @@ class HistoryActivity : AppCompatActivity() {
         binding.rvHistory.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 }
-

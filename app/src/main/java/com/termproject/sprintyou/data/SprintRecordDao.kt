@@ -13,6 +13,3 @@ interface SprintRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(record: SprintRecord)
 }
-
-
-

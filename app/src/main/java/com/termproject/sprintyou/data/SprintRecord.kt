@@ -17,6 +17,3 @@ data class SprintRecord(
     @ColumnInfo(name = "created_at")
     val createdAt: Long
 )
-
-
-
