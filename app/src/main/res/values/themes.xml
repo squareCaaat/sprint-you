@@ -1,8 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.SprintYou" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Key Colors -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/dark_blue_3</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+        
+        <item name="colorSecondary">@color/secondary_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/dark_blue_2</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+
+        <item name="colorTertiary">@color/dark_blue_3</item>
+        <item name="colorOnTertiary">@color/white</item>
+
+        <!-- Background & Surface -->
+        <item name="android:colorBackground">@color/minimal_background</item>
+        <item name="colorOnBackground">@color/dark_blue_1</item>
+        <item name="colorSurface">@color/minimal_background</item>
+        <item name="colorOnSurface">@color/dark_blue_1</item>
+        <item name="colorSurfaceVariant">@color/dark_blue_3</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
+        <item name="colorOutline">@color/secondary_blue</item>
+
+        <!-- Typography & Elements -->
+        <item name="android:statusBarColor">@color/minimal_background</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.SprintYou" parent="Base.Theme.SprintYou" />

@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="urgent_red">#FF3B30</color>
+
+    <!-- Project Key Colors -->
+    <color name="primary_blue">#3E92CC</color>
+    <color name="secondary_blue">#2A628F</color>
+    <color name="dark_blue_1">#13293D</color>
+    <color name="dark_blue_2">#16324F</color>
+    <color name="dark_blue_3">#18435A</color>
+
+    <!-- Semantic Colors -->
+    <color name="minimal_background">#FFFFFF</color>
 </resources>
