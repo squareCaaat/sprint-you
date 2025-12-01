@@ -1,12 +1,15 @@
 package com.termproject.sprintyou.ui.timer
 
+import android.animation.ArgbEvaluator
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.termproject.sprintyou.R
 import com.termproject.sprintyou.data.SprintDatabaseProvider
@@ -29,6 +32,10 @@ class TimerActivity : AppCompatActivity() {
     private var timer: CountDownTimer? = null
     private var pausedAt: Long = 0L
 
+    private val argbEvaluator = ArgbEvaluator()
+    private var defaultBackgroundColor: Int = 0
+    private var urgentBackgroundColor: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTimerBinding.inflate(layoutInflater)
@@ -49,6 +56,7 @@ class TimerActivity : AppCompatActivity() {
         bindClicks()
         updateCountdownText()
         updateProgress()
+        updateBackgroundColor()
     }
 
     override fun onResume() {
@@ -74,8 +82,11 @@ class TimerActivity : AppCompatActivity() {
 
     private fun setupViews() {
         binding.tvGoalTitle.text = goalContent
-        binding.progressTimer.max = targetDurationSeconds.toInt()
+        binding.progressTimer.max = targetDurationMillis.toInt()
         binding.progressTimer.setProgressCompat(0, false)
+
+        defaultBackgroundColor = MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorSurface)
+        urgentBackgroundColor = ContextCompat.getColor(this, R.color.urgent_red)
     }
 
     private fun bindClicks() {
@@ -94,11 +105,14 @@ class TimerActivity : AppCompatActivity() {
                 remainingMillis = millisUntilFinished
                 updateCountdownText()
                 updateProgress()
+                updateBackgroundColor()
             }
 
             override fun onFinish() {
                 remainingMillis = 0L
                 updateCountdownText()
+                updateProgress()
+                updateBackgroundColor()
                 handleTimeout()
             }
         }.start()
@@ -112,13 +126,18 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun updateProgress() {
-        val elapsedSeconds =
-            ((targetDurationMillis - remainingMillis + 999) / 1000).toInt().coerceAtLeast(0)
-        val maxProgress = binding.progressTimer.max.coerceAtLeast(1)
-        binding.progressTimer.setProgressCompat(
-            elapsedSeconds.coerceIn(0, maxProgress),
-            false
-        )
+        val elapsedMillis = (targetDurationMillis - remainingMillis).coerceAtLeast(0)
+        binding.progressTimer.setProgressCompat(elapsedMillis.toInt(), false)
+    }
+
+    private fun updateBackgroundColor() {
+        if (remainingMillis <= 10000) {
+            val fraction = (10000 - remainingMillis) / 10000f
+            val color = argbEvaluator.evaluate(fraction, defaultBackgroundColor, urgentBackgroundColor) as Int
+            binding.root.setBackgroundColor(color)
+        } else {
+            binding.root.setBackgroundColor(defaultBackgroundColor)
+        }
     }
 
     private fun completeSprint() {
@@ -172,6 +191,6 @@ class TimerActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_REMAINING_MILLIS = "key_remaining_millis"
-        private const val TICK_INTERVAL = 1000L
+        private const val TICK_INTERVAL = 20L
     }
 }
