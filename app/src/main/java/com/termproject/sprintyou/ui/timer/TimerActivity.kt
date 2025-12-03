@@ -15,9 +15,9 @@ import com.termproject.sprintyou.R
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.data.SprintRecord
 import com.termproject.sprintyou.databinding.ActivityTimerBinding
-import com.termproject.sprintyou.ui.goal.GoalSettingActivity
-import com.termproject.sprintyou.ui.history.HistoryActivity
+import com.termproject.sprintyou.ui.home.HomeActivity
 import com.termproject.sprintyou.ui.navigation.IntentKeys
+import com.termproject.sprintyou.ui.setup.SetupActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,10 +25,12 @@ import kotlinx.coroutines.withContext
 class TimerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTimerBinding
-    private var goalContent: String = ""
+    private var sprintTask: String = ""
     private var targetDurationSeconds: Long = 0L
     private var targetDurationMillis: Long = 0L
     private var remainingMillis: Long = 0L
+    private var mainGoalId: Long = -1L
+    private var mainGoalTitle: String = ""
     private var timer: CountDownTimer? = null
     private var pausedAt: Long = 0L
 
@@ -41,10 +43,12 @@ class TimerActivity : AppCompatActivity() {
         binding = ActivityTimerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        goalContent = intent.getStringExtra(IntentKeys.EXTRA_GOAL_CONTENT).orEmpty()
+        sprintTask = intent.getStringExtra(IntentKeys.EXTRA_SPRINT_TASK).orEmpty()
         targetDurationSeconds = intent.getLongExtra(IntentKeys.EXTRA_TARGET_DURATION_SECONDS, 0L)
+        mainGoalId = intent.getLongExtra(IntentKeys.EXTRA_MAIN_GOAL_ID, -1L)
+        mainGoalTitle = intent.getStringExtra(IntentKeys.EXTRA_MAIN_GOAL_TITLE).orEmpty()
 
-        if (goalContent.isEmpty() || targetDurationSeconds <= 0L) {
+        if (sprintTask.isEmpty() || targetDurationSeconds <= 0L || mainGoalId <= 0L || mainGoalTitle.isEmpty()) {
             finish()
             return
         }
@@ -81,7 +85,7 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        binding.tvGoalTitle.text = goalContent
+        binding.tvGoalTitle.text = sprintTask
         binding.progressTimer.max = targetDurationMillis.toInt()
         binding.progressTimer.setProgressCompat(0, false)
 
@@ -146,7 +150,8 @@ class TimerActivity : AppCompatActivity() {
             ((targetDurationMillis - remainingMillis + 999) / 1000).coerceIn(1, targetDurationSeconds)
         lifecycleScope.launch {
             val record = SprintRecord(
-                goalContent = goalContent,
+                parentGoalId = mainGoalId,
+                taskContent = sprintTask,
                 targetDurationSeconds = targetDurationSeconds,
                 actualDurationSeconds = actualSeconds,
                 createdAt = System.currentTimeMillis()
@@ -158,13 +163,16 @@ class TimerActivity : AppCompatActivity() {
             }
             Toast.makeText(this@TimerActivity, R.string.toast_success_saved, Toast.LENGTH_SHORT)
                 .show()
-            startActivity(Intent(this@TimerActivity, HistoryActivity::class.java))
+            val intent = Intent(this@TimerActivity, HomeActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+            startActivity(intent)
             finish()
         }
     }
 
     private fun handleTimeout() {
-        navigateToGoal(withPrefill = true)
+        navigateToSetup(withPrefill = true)
     }
 
     private fun showExitDialog() {
@@ -172,16 +180,18 @@ class TimerActivity : AppCompatActivity() {
             .setTitle(R.string.dialog_quit_title)
             .setMessage(R.string.dialog_quit_message)
             .setPositiveButton(R.string.dialog_quit_positive) { _, _ ->
-                navigateToGoal(withPrefill = true)
+                navigateToSetup(withPrefill = true)
             }
             .setNegativeButton(R.string.dialog_quit_negative, null)
             .show()
     }
 
-    private fun navigateToGoal(withPrefill: Boolean) {
-        val intent = Intent(this, GoalSettingActivity::class.java).apply {
+    private fun navigateToSetup(withPrefill: Boolean) {
+        val intent = Intent(this, SetupActivity::class.java).apply {
+            putExtra(IntentKeys.EXTRA_MAIN_GOAL_ID, mainGoalId)
+            putExtra(IntentKeys.EXTRA_MAIN_GOAL_TITLE, mainGoalTitle)
             if (withPrefill) {
-                putExtra(IntentKeys.EXTRA_GOAL_CONTENT, goalContent)
+                putExtra(IntentKeys.EXTRA_SPRINT_TASK, sprintTask)
             }
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
