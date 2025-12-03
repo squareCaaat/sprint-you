@@ -68,17 +68,41 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_total"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:helperText="@string/goal_total_helper"
+        app:helperTextEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_goal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_total_sprints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/goal_total_hint"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="3"
+            tools:text="10" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_ready"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:enabled="false"
         android:text="@string/action_ready"
         android:textAllCaps="false"
-        android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_goal" />
+        app:layout_constraintTop_toBottomOf="@id/til_total" />
 
     <TextView
         android:id="@+id/tv_tip"

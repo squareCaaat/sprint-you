@@ -23,7 +23,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class HistoryActivity : AppCompatActivity() {
+class CalendarActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCalendarBinding
     private val adapter = HistoryAdapter()
@@ -91,7 +91,7 @@ class HistoryActivity : AppCompatActivity() {
             .map { it.toCalendarDay() }
             .toSet()
 
-        val color = ContextCompat.getColor(this, R.color.secondary_blue)
+        val color = ContextCompat.getColor(this, R.color.primary_blue)
         val decorator = SprintDotDecorator(dates, color)
         binding.calendarView.addDecorator(decorator)
         dotDecorator = decorator

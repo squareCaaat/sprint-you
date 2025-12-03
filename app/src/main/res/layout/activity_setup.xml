@@ -12,35 +12,45 @@
         android:id="@+id/tv_goal_preview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:textColor="?attr/colorOnSurface"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="책 3페이지 읽기" />
+        tools:text="메인 목표: 토익 900점 달성" />
 
-    <TextView
-        android:id="@+id/tv_setup_header"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_sprint_task"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/setup_header"
-        android:textAppearance="?attr/textAppearanceHeadlineSmall"
-        android:textColor="?attr/colorOnSurface"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_goal_preview" />
+        app:layout_constraintTop_toBottomOf="@id/tv_goal_preview">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_sprint_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/setup_task_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
+            android:maxLength="40"
+            tools:text="단어 20개 암기" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tv_time_display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:textAppearance="?attr/textAppearanceDisplaySmall"
         android:textColor="?attr/colorOnSurface"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_setup_header"
+        app:layout_constraintTop_toBottomOf="@id/til_sprint_task"
         tools:text="05:00" />
 
     <com.google.android.material.slider.Slider
@@ -62,6 +72,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:enabled="false"
         android:text="@string/action_start_sprint"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"

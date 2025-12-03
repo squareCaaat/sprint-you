@@ -11,43 +11,29 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.termproject.sprintyou.R
+import com.termproject.sprintyou.data.MainGoal
+import com.termproject.sprintyou.data.MainGoalStatus
+import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.databinding.ActivityGoalSettingBinding
-import com.termproject.sprintyou.ui.history.HistoryActivity
-import com.termproject.sprintyou.ui.navigation.IntentKeys
-import com.termproject.sprintyou.ui.setup.SetupActivity
+import com.termproject.sprintyou.ui.history.CalendarActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.lifecycle.lifecycleScope
 
 class GoalSettingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGoalSettingBinding
+    private val database by lazy { SprintDatabaseProvider.getDatabase(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGoalSettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val handled = prefillGoal(intent.getStringExtra(IntentKeys.EXTRA_GOAL_CONTENT))
-        if (!handled) {
-            setReadyEnabled(false)
-        }
+        setReadyEnabled(false)
         setupInputWatcher()
         bindClicks()
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        prefillGoal(intent.getStringExtra(IntentKeys.EXTRA_GOAL_CONTENT))
-    }
-
-    private fun prefillGoal(goal: String?): Boolean {
-        val value = goal?.trim().orEmpty()
-        if (value.isNotEmpty()) {
-            binding.etGoal.setText(value)
-            binding.etGoal.setSelection(value.length)
-            setReadyEnabled(true)
-            return true
-        }
-        return false
     }
 
     private fun setupInputWatcher() {
@@ -58,19 +44,39 @@ class GoalSettingActivity : AppCompatActivity() {
 
     private fun bindClicks() {
         binding.btnReady.setOnClickListener {
-            val goal = binding.etGoal.text?.toString()?.trim().orEmpty()
-            if (goal.isEmpty()) {
-                Toast.makeText(this, R.string.toast_goal_required, Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val intent = Intent(this, SetupActivity::class.java).apply {
-                putExtra(IntentKeys.EXTRA_GOAL_CONTENT, goal)
-            }
-            startActivity(intent)
+            createMainGoal()
         }
 
         binding.btnHistory.setOnClickListener {
-            startActivity(Intent(this, HistoryActivity::class.java))
+            startActivity(Intent(this, CalendarActivity::class.java))
+        }
+    }
+
+    private fun createMainGoal() {
+        val goal = binding.etGoal.text?.toString()?.trim().orEmpty()
+        if (goal.isEmpty()) {
+            Toast.makeText(this, R.string.toast_goal_required, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val totalSprints = binding.etTotalSprints.text?.toString()?.toIntOrNull()?.takeIf { it > 0 }
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val dao = database.mainGoalDao()
+                dao.updateStatusFor(
+                    currentStatus = MainGoalStatus.ACTIVE,
+                    newStatus = MainGoalStatus.GAVE_UP
+                )
+                dao.insert(
+                    MainGoal(
+                        title = goal,
+                        totalSprints = totalSprints
+                    )
+                )
+            }
+            Toast.makeText(this@GoalSettingActivity, R.string.toast_goal_created, Toast.LENGTH_SHORT)
+                .show()
+            finish()
         }
     }
 
