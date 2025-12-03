@@ -7,11 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.FirebaseApp
 import com.termproject.sprintyou.R
+import com.termproject.sprintyou.auth.AuthManager
 import com.termproject.sprintyou.data.GoalWithProgress
 import com.termproject.sprintyou.data.MainGoalStatus
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.databinding.ActivityHomeBinding
+import com.termproject.sprintyou.ui.auth.LoginActivity
 import com.termproject.sprintyou.ui.goal.GoalSettingActivity
 import com.termproject.sprintyou.ui.history.CalendarActivity
 import com.termproject.sprintyou.ui.navigation.IntentKeys
@@ -31,11 +34,14 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        FirebaseApp.initializeApp(this)
         bindClicks()
+        updateLoginHeader()
     }
 
     override fun onResume() {
         super.onResume()
+        updateLoginHeader()
         loadActiveGoal()
     }
 
@@ -43,8 +49,8 @@ class HomeActivity : AppCompatActivity() {
         binding.btnCalendar.setOnClickListener {
             startActivity(Intent(this, CalendarActivity::class.java))
         }
-        binding.btnSettings.setOnClickListener {
-            Toast.makeText(this, R.string.toast_settings_placeholder, Toast.LENGTH_SHORT).show()
+        binding.btnProfile.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
         binding.btnCreateGoal.setOnClickListener {
             startActivity(Intent(this, GoalSettingActivity::class.java))
@@ -78,6 +84,7 @@ class HomeActivity : AppCompatActivity() {
         binding.layoutEmptyGoal.isVisible = !hasGoal
         binding.layoutActiveGoal.isVisible = hasGoal
         binding.btnStartSprint.isEnabled = hasGoal
+        updateLoginHeader()
 
         goalWithProgress?.let { data ->
             val goal = data.goal
@@ -129,5 +136,15 @@ class HomeActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.dialog_complete_goal_negative, null)
             .show()
+    }
+
+    private fun updateLoginHeader() {
+        val headerText = if (AuthManager.isLoggedIn) {
+            val email = AuthManager.currentUserEmail ?: getString(R.string.login_unknown_user)
+            getString(R.string.home_header_signed_in, email.substringBefore("@"))
+        } else {
+            getString(R.string.home_header)
+        }
+        binding.tvHomeHeader.text = headerText
     }
 }
