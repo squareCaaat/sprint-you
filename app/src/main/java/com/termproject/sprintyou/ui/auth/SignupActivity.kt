@@ -3,7 +3,9 @@ package com.termproject.sprintyou.ui.auth
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.termproject.sprintyou.R
 import com.termproject.sprintyou.auth.AuthManager
@@ -26,6 +28,9 @@ class SignupActivity : AppCompatActivity() {
         binding.btnClose.setOnClickListener { finish() }
         binding.btnGoToLogin.setOnClickListener { finish() }
         binding.btnSignup.setOnClickListener { attemptSignUp() }
+        binding.etPassword.doOnTextChanged { text, _, _, _ ->
+            updatePasswordStrength(text?.toString().orEmpty())
+        }
     }
 
     private fun attemptSignUp() {
@@ -81,8 +86,29 @@ class SignupActivity : AppCompatActivity() {
         binding.btnGoToLogin.isEnabled = !isLoading
     }
 
+    private fun updatePasswordStrength(password: String) {
+        when {
+            password.length >= PASSWORD_MIN_LENGTH && SPECIAL_CHAR_REGEX.containsMatchIn(password) -> {
+                binding.tvPasswordStrength.isVisible = true
+                binding.tvPasswordStrength.text = getString(R.string.password_strength_strong)
+                binding.tvPasswordStrength.setTextColor(
+                    ContextCompat.getColor(this, R.color.primary_blue)
+                )
+            }
+            password.length >= PASSWORD_MIN_LENGTH -> {
+                binding.tvPasswordStrength.isVisible = true
+                binding.tvPasswordStrength.text = getString(R.string.password_strength_weak)
+                binding.tvPasswordStrength.setTextColor(
+                    ContextCompat.getColor(this, R.color.urgent_red)
+                )
+            }
+            else -> binding.tvPasswordStrength.isVisible = false
+        }
+    }
+
     companion object {
         private const val PASSWORD_MIN_LENGTH = 6
+        private val SPECIAL_CHAR_REGEX = Regex("[^A-Za-z0-9]")
     }
 }
 
