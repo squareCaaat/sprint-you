@@ -21,13 +21,13 @@
         app:tint="?attr/colorOnSurface" />
 
     <ImageButton
-        android:id="@+id/btn_settings"
+        android:id="@+id/btn_profile"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/desc_settings"
         android:padding="12dp"
-        android:src="@drawable/ic_settings"
+        android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnSurface" />
