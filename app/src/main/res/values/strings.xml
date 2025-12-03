@@ -77,6 +77,11 @@
     <string name="login_toast_sign_out">로그아웃했어요.</string>
     <string name="login_unavailable_message">현재 이 기기에서는 로그인 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.</string>
     <string name="login_unavailable_toast">로그인 기능이 아직 준비되지 않았어요.</string>
+    <string name="signup_title">이메일로 새 계정을 만들어요</string>
+    <string name="signup_subtitle">한 번만 등록하면 모든 기기에서 Sprint 기록을 백업할 수 있어요.</string>
+    <string name="signup_button_confirm">계정 만들기</string>
+    <string name="signup_button_back_to_login">로그인 화면으로 돌아가기</string>
+    <string name="signup_toast_success">새 계정을 생성하고 로그인했어요!</string>
     <string name="error_email_required">이메일을 입력해 주세요.</string>
     <string name="error_password_required">비밀번호를 입력해 주세요.</string>
     <string name="error_password_short">비밀번호는 6자 이상이어야 해요.</string>
