@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SprintYou">
         <activity
-            android:name="com.termproject.sprintyou.ui.history.HistoryActivity"
+            android:name="com.termproject.sprintyou.ui.history.CalendarActivity"
             android:exported="false" />
         <activity
             android:name="com.termproject.sprintyou.ui.timer.TimerActivity"
@@ -22,6 +22,9 @@
             android:exported="false" />
         <activity
             android:name="com.termproject.sprintyou.ui.goal.GoalSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.termproject.sprintyou.ui.home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
