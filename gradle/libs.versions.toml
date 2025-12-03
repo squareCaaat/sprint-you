@@ -17,6 +17,8 @@ desugarJdk = "2.1.5"
 firebaseBom = "34.6.0"
 googleServices = "4.4.4"
 coroutinesPlay = "1.10.2"
+gson = "2.11.0"
+firebaseDatabase = "com.google.firebase:firebase-database"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,7 +39,9 @@ desugar-jdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-database = { module = "com.google.firebase:firebase-database" }
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlay" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
