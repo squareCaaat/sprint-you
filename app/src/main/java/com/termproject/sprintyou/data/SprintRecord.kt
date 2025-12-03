@@ -2,14 +2,32 @@ package com.termproject.sprintyou.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "sprint_records")
+@Entity(
+    tableName = "sprint_records",
+    foreignKeys = [
+        ForeignKey(
+            entity = MainGoal::class,
+            parentColumns = ["goal_id"],
+            childColumns = ["parent_goal_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["parent_goal_id"])
+    ]
+)
 data class SprintRecord(
     @PrimaryKey(autoGenerate = true)
-    val uid: Int = 0,
-    @ColumnInfo(name = "goal_content")
-    val goalContent: String,
+    @ColumnInfo(name = "sprint_id")
+    val sprintId: Long = 0,
+    @ColumnInfo(name = "parent_goal_id")
+    val parentGoalId: Long,
+    @ColumnInfo(name = "task_content")
+    val taskContent: String,
     @ColumnInfo(name = "target_duration")
     val targetDurationSeconds: Long,
     @ColumnInfo(name = "actual_duration")
