@@ -79,7 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/login_password_hint"
-            app:startIconDrawable="@drawable/ic_lock">
+            app:startIconDrawable="@drawable/ic_lock"
+            app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
@@ -90,6 +91,16 @@
                 tools:text="password" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_password_strength"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="@color/secondary_blue"
+            android:visibility="gone"
+            tools:text="@string/password_strength_weak" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_signup"
