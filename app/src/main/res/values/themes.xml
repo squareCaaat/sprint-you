@@ -4,29 +4,30 @@
         <!-- Key Colors -->
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/dark_blue_3</item>
-        <item name="colorOnPrimaryContainer">@color/white</item>
+        <item name="colorPrimaryContainer">@color/secondary_blue</item>
+        <item name="colorOnPrimaryContainer">@color/strong_black</item>
         
         <item name="colorSecondary">@color/secondary_blue</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="colorSecondaryContainer">@color/dark_blue_2</item>
-        <item name="colorOnSecondaryContainer">@color/white</item>
+        <item name="colorOnSecondary">@color/strong_black</item>
+        <item name="colorSecondaryContainer">@color/secondary_blue</item>
+        <item name="colorOnSecondaryContainer">@color/strong_black</item>
 
-        <item name="colorTertiary">@color/dark_blue_3</item>
+        <item name="colorTertiary">@color/strong_black</item>
         <item name="colorOnTertiary">@color/white</item>
 
         <!-- Background & Surface -->
         <item name="android:colorBackground">@color/minimal_background</item>
-        <item name="colorOnBackground">@color/dark_blue_1</item>
+        <item name="colorOnBackground">@color/strong_black</item>
         <item name="colorSurface">@color/minimal_background</item>
-        <item name="colorOnSurface">@color/dark_blue_1</item>
-        <item name="colorSurfaceVariant">@color/dark_blue_3</item>
-        <item name="colorOnSurfaceVariant">@color/white</item>
-        <item name="colorOutline">@color/secondary_blue</item>
+        <item name="colorOnSurface">@color/strong_black</item>
+        <item name="colorSurfaceVariant">@color/secondary_blue</item>
+        <item name="colorOnSurfaceVariant">@color/strong_black</item>
+        <item name="colorOutline">@color/primary_blue</item>
 
         <!-- Typography & Elements -->
         <item name="android:statusBarColor">@color/minimal_background</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/strong_black</item>
     </style>
 
     <style name="Theme.SprintYou" parent="Base.Theme.SprintYou" />

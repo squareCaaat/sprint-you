@@ -4,13 +4,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="urgent_red">#FF3B30</color>
 
-    <!-- Project Key Colors -->
-    <color name="primary_blue">#3E92CC</color>
-    <color name="secondary_blue">#2A628F</color>
-    <color name="dark_blue_1">#13293D</color>
-    <color name="dark_blue_2">#16324F</color>
-    <color name="dark_blue_3">#18435A</color>
+    <!-- New Project Key Colors -->
+    <color name="primary_blue">#4A70A9</color>
+    <color name="secondary_blue">#8FABD4</color>
+    <color name="background_beige">#EFECE3</color>
+    <color name="strong_black">#000000</color>
 
-    <!-- Semantic Colors -->
-    <color name="minimal_background">#FFFFFF</color>
+    <!-- Semantic Colors mapping -->
+    <color name="minimal_background">@color/background_beige</color>
 </resources>
