@@ -43,6 +43,9 @@ class GoalSettingActivity : AppCompatActivity() {
     }
 
     private fun bindClicks() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
         binding.btnReady.setOnClickListener {
             createMainGoal()
         }

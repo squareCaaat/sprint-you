@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SprintYou">
         <activity
+            android:name="com.termproject.sprintyou.ui.auth.SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.termproject.sprintyou.ui.auth.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name="com.termproject.sprintyou.ui.history.CalendarActivity"
             android:exported="false" />
         <activity

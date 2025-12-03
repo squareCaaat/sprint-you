@@ -14,6 +14,9 @@ lifecycleRuntime = "2.10.0"
 recyclerview = "1.4.0"
 materialCalendar = "1.4.3"
 desugarJdk = "2.1.5"
+firebaseBom = "34.6.0"
+googleServices = "4.4.4"
+coroutinesPlay = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,8 +34,13 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "materialCalendar" }
 desugar-jdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdk" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlay" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 

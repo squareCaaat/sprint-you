@@ -91,7 +91,7 @@ class CalendarActivity : AppCompatActivity() {
             .map { it.toCalendarDay() }
             .toSet()
 
-        val color = ContextCompat.getColor(this, R.color.primary_blue)
+        val color = ContextCompat.getColor(this, R.color.secondary_blue)
         val decorator = SprintDotDecorator(dates, color)
         binding.calendarView.addDecorator(decorator)
         dotDecorator = decorator
