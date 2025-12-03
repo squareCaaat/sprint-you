@@ -5,14 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.termproject.sprintyou.data.SprintRecord
+import com.termproject.sprintyou.R
+import com.termproject.sprintyou.data.SprintHistoryItem
 import com.termproject.sprintyou.databinding.ItemHistoryBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class HistoryAdapter :
-    ListAdapter<SprintRecord, HistoryAdapter.HistoryViewHolder>(DiffCallback) {
+    ListAdapter<SprintHistoryItem, HistoryAdapter.HistoryViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val binding =
@@ -28,8 +30,20 @@ class HistoryAdapter :
         private val binding: ItemHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(record: SprintRecord) {
-            binding.tvGoal.text = record.goalContent
+        fun bind(item: SprintHistoryItem) {
+            val context = binding.root.context
+            val record = item.record
+            binding.tvSprintTask.text = record.taskContent
+            val goalTitle = item.mainGoalTitle ?: context.getString(R.string.history_unknown_goal)
+            binding.tvGoalName.text = context.getString(
+                R.string.history_goal_prefix,
+                goalTitle
+            )
+            binding.tvDuration.text = context.getString(
+                R.string.history_duration_format,
+                (record.actualDurationSeconds / 60.0).roundToInt(),
+                (record.targetDurationSeconds / 60.0).roundToInt()
+            )
             binding.tvCreatedAt.text = DATE_FORMATTER.format(Date(record.createdAt))
         }
     }
@@ -38,12 +52,12 @@ class HistoryAdapter :
         private val DATE_FORMATTER =
             SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault())
 
-        private val DiffCallback = object : DiffUtil.ItemCallback<SprintRecord>() {
-            override fun areItemsTheSame(oldItem: SprintRecord, newItem: SprintRecord): Boolean {
-                return oldItem.uid == newItem.uid
+        private val DiffCallback = object : DiffUtil.ItemCallback<SprintHistoryItem>() {
+            override fun areItemsTheSame(oldItem: SprintHistoryItem, newItem: SprintHistoryItem): Boolean {
+                return oldItem.record.sprintId == newItem.record.sprintId
             }
 
-            override fun areContentsTheSame(oldItem: SprintRecord, newItem: SprintRecord): Boolean {
+            override fun areContentsTheSame(oldItem: SprintHistoryItem, newItem: SprintHistoryItem): Boolean {
                 return oldItem == newItem
             }
         }
