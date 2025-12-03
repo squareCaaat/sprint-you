@@ -51,6 +51,10 @@ class SetupActivity : AppCompatActivity() {
             setStartEnabled(!text.isNullOrBlank())
         }
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.btnStart.setOnClickListener {
             val sprintTask = binding.etSprintTask.text?.toString()?.trim().orEmpty()
             if (sprintTask.isEmpty()) {
