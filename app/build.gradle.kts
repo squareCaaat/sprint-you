@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
     kotlin("kapt")
 }
 
@@ -54,6 +55,10 @@ dependencies {
     implementation(libs.material.calendarview)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.coroutines.play.services)
     kapt(libs.androidx.room.compiler)
     coreLibraryDesugaring(libs.desugar.jdk)
     testImplementation(libs.junit)
