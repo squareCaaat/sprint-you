@@ -18,8 +18,10 @@ firebaseBom = "34.6.0"
 googleServices = "4.4.4"
 coroutinesPlay = "1.10.2"
 gson = "2.13.2"
+work = "2.11.0"
 
 [libraries]
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

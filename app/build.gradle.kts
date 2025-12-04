@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.coroutines.play.services)
     implementation(libs.gson)
+    implementation(libs.androidx.work.runtime.ktx)
     kapt(libs.androidx.room.compiler)
     coreLibraryDesugaring(libs.desugar.jdk)
     testImplementation(libs.junit)
