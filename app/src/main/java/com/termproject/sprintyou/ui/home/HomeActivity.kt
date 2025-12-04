@@ -41,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateLoginHeader()
-        maybeSyncRemoteThenLoad()
+        loadActiveGoal()
     }
 
     private fun bindClicks() {
@@ -75,19 +75,6 @@ class HomeActivity : AppCompatActivity() {
             }
             activeGoal = goalWithProgress
             updateGoalState(goalWithProgress)
-        }
-    }
-
-    private fun maybeSyncRemoteThenLoad() {
-        if (!AuthManager.isFirebaseReady || !AuthManager.isLoggedIn) {
-            loadActiveGoal()
-            return
-        }
-        lifecycleScope.launch {
-            runCatching {
-                FirebaseSyncManager.pullRemoteData(applicationContext)
-            }
-            loadActiveGoal()
         }
     }
 

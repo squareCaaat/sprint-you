@@ -3,7 +3,14 @@ package com.termproject.sprintyou.sync
 import android.content.Context
 import android.util.Log
 import androidx.room.withTransaction
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.firebase.Firebase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.PropertyName
 import com.google.firebase.database.database
 import com.termproject.sprintyou.auth.AuthManager
 import com.termproject.sprintyou.auth.FirebaseScopeResolver
@@ -18,7 +25,9 @@ import kotlinx.coroutines.withContext
 object FirebaseSyncManager {
 
     private const val TAG = "FirebaseSyncManager"
-    private val database by lazy { Firebase.database("https://sprint-you-db-default-rtdb.asia-southeast1.firebasedatabase.app") }
+    private val database: DatabaseReference by lazy {
+        Firebase.database("https://sprint-you-db-default-rtdb.asia-southeast1.firebasedatabase.app").reference
+    }
 
     suspend fun pushLocalData(context: Context) {
         if (!AuthManager.isFirebaseReady || !AuthManager.isLoggedIn || AuthManager.currentUserId == null) {
@@ -47,12 +56,13 @@ object FirebaseSyncManager {
             )
         }
 
-        Log.d(TAG, "Attempting to write to path: ${scope.root}/${scope.scopeId}")
-        Log.d(TAG, "Current user UID: ${AuthManager.currentUserId}")
-        Log.d(TAG, "Data to be written: $localData")
+        Log.d(
+            TAG,
+            "pushLocalData path=${scope.root}/${scope.scopeId} goals=${(localData["goals"] as? Map<*, *>)?.size} sprints=${(localData["sprints"] as? Map<*, *>)?.size}"
+        )
 
         try {
-            database.reference
+            database
                 .child(scope.root)
                 .child(scope.scopeId)
                 .setValue(localData)
@@ -69,6 +79,19 @@ object FirebaseSyncManager {
         }
     }
 
+    fun scheduleSync(context: Context) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork("sync_work", ExistingWorkPolicy.KEEP, syncRequest)
+    }
+
     suspend fun pullRemoteData(context: Context) {
         if (!AuthManager.isFirebaseReady || !AuthManager.isLoggedIn || AuthManager.currentUserId == null) {
             Log.d(TAG, "pullRemoteData skipped: auth not ready")
@@ -77,7 +100,7 @@ object FirebaseSyncManager {
 
         val scope = FirebaseScopeResolver.resolve(context)
         Log.d(TAG, "pullRemoteData scope=${scope.root}/${scope.scopeId}")
-        val snapshot = database.reference
+        val snapshot = database
             .child(scope.root)
             .child(scope.scopeId)
             .get()
@@ -120,7 +143,6 @@ object FirebaseSyncManager {
             Log.d(TAG, "pullRemoteData success for ${scope.scopeId}")
         } catch (e: Exception) {
             Log.e(TAG, "pullRemoteData failed", e)
-            throw e
         }
     }
 }
@@ -135,6 +157,7 @@ private data class RemoteMainGoalDto(
     var firebaseId: String? = null,
     var ownerUid: String? = null,
     var lastModified: Long? = null,
+    @get:PropertyName("isSynced") @set:PropertyName("isSynced")
     var isSynced: Boolean? = null
 ) {
     fun toEntity(): MainGoal? {
@@ -182,6 +205,7 @@ private data class RemoteSprintRecordDto(
     var firebaseId: String? = null,
     var ownerUid: String? = null,
     var lastModified: Long? = null,
+    @get:PropertyName("isSynced") @set:PropertyName("isSynced")
     var isSynced: Boolean? = null
 ) {
     fun toEntity(): SprintRecord? {
