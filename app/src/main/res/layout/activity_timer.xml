@@ -22,32 +22,32 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnSurface" />
 
-    <TextView
-        android:id="@+id/tv_goal_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_m"
-        android:layout_marginEnd="@dimen/layout_horizontal_margin"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        android:textColor="?attr/colorOnSurface"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/btn_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_back"
-        app:layout_constraintTop_toTopOf="@id/btn_back"
-        tools:text="책 3페이지 읽기" />
-
-    <!-- 타이머 중앙 영역 -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingHorizontal="@dimen/layout_horizontal_margin"
         app:layout_constraintBottom_toTopOf="@+id/btn_complete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_back">
+
+        <TextView
+            android:id="@+id/tv_goal_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_l"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/progress_timer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="책 3페이지 읽기" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_timer"
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_goal_title"
             app:trackCornerRadius="24dp"
             app:trackThickness="24dp" />
 
