@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing (8pt Grid System) -->
+    <dimen name="spacing_xxs">4dp</dimen>
+    <dimen name="spacing_xs">8dp</dimen>
+    <dimen name="spacing_s">12dp</dimen>
+    <dimen name="spacing_m">16dp</dimen>
+    <dimen name="spacing_l">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- Layout -->
+    <dimen name="layout_horizontal_margin">24dp</dimen>
+    <dimen name="layout_vertical_margin">24dp</dimen>
+    <dimen name="bottom_button_height">56dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_touch_target">48dp</dimen>
+
+    <!-- Typography -->
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_subhead">16sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+</resources>
