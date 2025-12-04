@@ -60,6 +60,7 @@
     <string name="history_goal_prefix">[%1$s] 목표</string>
     <string name="history_duration_format">실제 %1$d분 / 목표 %2$d분</string>
     <string name="history_unknown_goal">이전 목표</string>
+    <string name="history_desc_expand">Sprint 목록 확장</string>
 
     <!-- Login -->
     <string name="login_title">내 Sprint를 계정에 백업하기</string>

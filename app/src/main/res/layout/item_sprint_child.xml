@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorSurface"
-    android:paddingStart="32dp"
-    android:paddingTop="12dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="12dp">
+    android:minHeight="@dimen/icon_touch_target"
+    android:paddingStart="@dimen/spacing_xl"
+    android:paddingTop="@dimen/spacing_s"
+    android:paddingEnd="@dimen/spacing_m"
+    android:paddingBottom="@dimen/spacing_s">
 
     <View
         android:id="@+id/view_line"
         android:layout_width="2dp"
         android:layout_height="0dp"
-        android:background="?attr/colorOutlineVariant"
+        android:background="?attr/colorOutline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,24 +24,32 @@
         android:id="@+id/tv_task_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/spacing_s"
+        android:layout_marginEnd="@dimen/spacing_xs"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBottom_toTopOf="@id/tv_date"
         app:layout_constraintEnd_toStartOf="@id/tv_duration"
         app:layout_constraintStart_toEndOf="@id/view_line"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="오늘의 운동 완료" />
 
     <TextView
         android:id="@+id/tv_date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/spacing_s"
+        android:layout_marginTop="@dimen/spacing_xxs"
+        android:layout_marginEnd="@dimen/spacing_xs"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textAppearance="?attr/textAppearanceBodySmall"
         android:textColor="?attr/colorOnSurfaceVariant"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_duration"
         app:layout_constraintStart_toEndOf="@id/view_line"
         app:layout_constraintTop_toBottomOf="@id/tv_task_content"
         tools:text="12월 5일 오후 3:30" />
@@ -52,9 +61,9 @@
         android:textAppearance="?attr/textAppearanceLabelMedium"
         android:textColor="?attr/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/tv_date"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_task_content"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="25분 00초" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
