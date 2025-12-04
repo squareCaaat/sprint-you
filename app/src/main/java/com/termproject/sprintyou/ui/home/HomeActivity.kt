@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.FirebaseApp
 import com.termproject.sprintyou.R
 import com.termproject.sprintyou.auth.AuthManager
 import com.termproject.sprintyou.data.GoalWithProgress
 import com.termproject.sprintyou.data.MainGoalStatus
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.databinding.ActivityHomeBinding
+import com.termproject.sprintyou.sync.FirebaseSyncManager
 import com.termproject.sprintyou.ui.auth.LoginActivity
 import com.termproject.sprintyou.ui.goal.GoalSettingActivity
 import com.termproject.sprintyou.ui.history.CalendarActivity
@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        FirebaseApp.initializeApp(this)
         bindClicks()
         updateLoginHeader()
     }
@@ -123,14 +122,19 @@ class HomeActivity : AppCompatActivity() {
             .setPositiveButton(R.string.dialog_complete_goal_positive) { _, _ ->
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
+                        val now = System.currentTimeMillis()
                         database.mainGoalDao().updateGoalStatus(
                             goalId = goalId,
                             status = MainGoalStatus.COMPLETED,
-                            completedAt = System.currentTimeMillis()
+                            completedAt = now,
+                            lastModified = now
                         )
                     }
                     Toast.makeText(this@HomeActivity, R.string.toast_goal_completed, Toast.LENGTH_SHORT)
                         .show()
+                    if (AuthManager.isLoggedIn) {
+                        runCatching { FirebaseSyncManager.pushLocalData(applicationContext) }
+                    }
                     loadActiveGoal()
                 }
             }

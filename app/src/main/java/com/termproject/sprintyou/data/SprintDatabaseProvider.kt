@@ -64,6 +64,21 @@ object SprintDatabaseProvider {
             database.execSQL("ALTER TABLE sprint_records_new RENAME TO sprint_records")
         }
     }
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE main_goals ADD COLUMN firebase_id TEXT")
+            database.execSQL("ALTER TABLE main_goals ADD COLUMN owner_uid TEXT")
+            database.execSQL("ALTER TABLE main_goals ADD COLUMN last_modified INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("ALTER TABLE main_goals ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("UPDATE main_goals SET last_modified = strftime('%s','now') * 1000")
+
+            database.execSQL("ALTER TABLE sprint_records ADD COLUMN firebase_id TEXT")
+            database.execSQL("ALTER TABLE sprint_records ADD COLUMN owner_uid TEXT")
+            database.execSQL("ALTER TABLE sprint_records ADD COLUMN last_modified INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("ALTER TABLE sprint_records ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("UPDATE sprint_records SET last_modified = strftime('%s','now') * 1000")
+        }
+    }
 
     fun getDatabase(context: Context): SprintDatabase {
         return INSTANCE ?: synchronized(this) {
@@ -72,7 +87,7 @@ object SprintDatabaseProvider {
                 SprintDatabase::class.java,
                 "sprint_db"
             )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
                 .also { INSTANCE = it }
         }

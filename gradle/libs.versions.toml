@@ -7,7 +7,7 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 appcompat = "1.7.1"
 material = "1.13.0"
-activity = "1.12.0"
+activity = "1.12.1"
 constraintlayout = "2.2.1"
 room = "2.8.4"
 lifecycleRuntime = "2.10.0"
@@ -17,8 +17,11 @@ desugarJdk = "2.1.5"
 firebaseBom = "34.6.0"
 googleServices = "4.4.4"
 coroutinesPlay = "1.10.2"
+gson = "2.13.2"
+work = "2.11.0"
 
 [libraries]
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -37,7 +40,9 @@ desugar-jdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
+firebase-database = { module = "com.google.firebase:firebase-database" }
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlay" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

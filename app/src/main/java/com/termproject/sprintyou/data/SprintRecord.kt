@@ -33,5 +33,13 @@ data class SprintRecord(
     @ColumnInfo(name = "actual_duration")
     val actualDurationSeconds: Long,
     @ColumnInfo(name = "created_at")
-    val createdAt: Long
+    val createdAt: Long,
+    @ColumnInfo(name = "firebase_id")
+    val firebaseId: String? = null,
+    @ColumnInfo(name = "owner_uid")
+    val ownerUid: String? = null,
+    @ColumnInfo(name = "last_modified")
+    val lastModified: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "is_synced")
+    val isSynced: Boolean = false
 )

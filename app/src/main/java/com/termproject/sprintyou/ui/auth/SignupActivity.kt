@@ -7,9 +7,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.termproject.sprintyou.R
 import com.termproject.sprintyou.auth.AuthManager
 import com.termproject.sprintyou.databinding.ActivitySignupBinding
+import com.termproject.sprintyou.sync.FirebaseSyncManager
+import com.termproject.sprintyou.sync.SnapshotManager
 import kotlinx.coroutines.launch
 
 class SignupActivity : AppCompatActivity() {
@@ -64,15 +67,14 @@ class SignupActivity : AppCompatActivity() {
 
         setLoading(true)
         lifecycleScope.launch {
-            val result = runCatching {
-                AuthManager.signUp(email, password)
-            }
+            runCatching { SnapshotManager.saveSnapshot(applicationContext) }
+            val result = runCatching { AuthManager.signUp(email, password) }
             setLoading(false)
             result
                 .onSuccess {
                     Toast.makeText(this@SignupActivity, R.string.signup_toast_success, Toast.LENGTH_SHORT)
                         .show()
-                    finish()
+                    showSyncDecisionDialog()
                 }
                 .onFailure {
                     binding.tilPassword.error = it.localizedMessage
@@ -84,6 +86,35 @@ class SignupActivity : AppCompatActivity() {
         binding.progressLoading.isVisible = isLoading
         binding.btnSignup.isEnabled = !isLoading
         binding.btnGoToLogin.isEnabled = !isLoading
+    }
+
+    private fun showSyncDecisionDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.sync_dialog_title)
+            .setMessage(R.string.sync_dialog_message)
+            .setPositiveButton(R.string.sync_action_restore) { _, _ ->
+                lifecycleScope.launch {
+                    setLoading(true)
+                    runCatching { FirebaseSyncManager.pullRemoteData(applicationContext) }
+                    setLoading(false)
+                    Toast.makeText(this@SignupActivity, R.string.sync_toast_restore, Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+            .setNegativeButton(R.string.sync_action_backup) { _, _ ->
+                lifecycleScope.launch {
+                    setLoading(true)
+                    runCatching { FirebaseSyncManager.pushLocalData(applicationContext) }
+                    setLoading(false)
+                    Toast.makeText(this@SignupActivity, R.string.sync_toast_backup, Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+            .setNeutralButton(R.string.sync_action_later) { _, _ ->
+                finish()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun updatePasswordStrength(password: String) {

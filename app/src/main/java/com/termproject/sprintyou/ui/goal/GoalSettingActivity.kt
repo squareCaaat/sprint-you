@@ -11,10 +11,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.termproject.sprintyou.R
+import com.termproject.sprintyou.auth.AuthManager
+import com.termproject.sprintyou.auth.FirebaseScopeResolver
 import com.termproject.sprintyou.data.MainGoal
 import com.termproject.sprintyou.data.MainGoalStatus
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.databinding.ActivityGoalSettingBinding
+import com.termproject.sprintyou.sync.FirebaseSyncManager
 import com.termproject.sprintyou.ui.history.CalendarActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,18 +67,27 @@ class GoalSettingActivity : AppCompatActivity() {
         val totalSprints = binding.etTotalSprints.text?.toString()?.toIntOrNull()?.takeIf { it > 0 }
 
         lifecycleScope.launch {
+            val now = System.currentTimeMillis()
+            val ownerId = FirebaseScopeResolver.ownerId(this@GoalSettingActivity)
             withContext(Dispatchers.IO) {
                 val dao = database.mainGoalDao()
                 dao.updateStatusFor(
                     currentStatus = MainGoalStatus.ACTIVE,
-                    newStatus = MainGoalStatus.GAVE_UP
+                    newStatus = MainGoalStatus.GAVE_UP,
+                    lastModified = now
                 )
                 dao.insert(
                     MainGoal(
                         title = goal,
-                        totalSprints = totalSprints
+                        totalSprints = totalSprints,
+                        ownerUid = ownerId,
+                        lastModified = now,
+                        isSynced = false
                     )
                 )
+            }
+            if (AuthManager.isLoggedIn) {
+                runCatching { FirebaseSyncManager.pushLocalData(applicationContext) }
             }
             Toast.makeText(this@GoalSettingActivity, R.string.toast_goal_created, Toast.LENGTH_SHORT)
                 .show()

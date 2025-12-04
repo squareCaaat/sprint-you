@@ -12,9 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.termproject.sprintyou.R
+import com.termproject.sprintyou.auth.AuthManager
+import com.termproject.sprintyou.auth.FirebaseScopeResolver
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.data.SprintRecord
 import com.termproject.sprintyou.databinding.ActivityTimerBinding
+import com.termproject.sprintyou.sync.FirebaseSyncManager
 import com.termproject.sprintyou.ui.home.HomeActivity
 import com.termproject.sprintyou.ui.navigation.IntentKeys
 import com.termproject.sprintyou.ui.setup.SetupActivity
@@ -149,12 +152,17 @@ class TimerActivity : AppCompatActivity() {
         val actualSeconds =
             ((targetDurationMillis - remainingMillis + 999) / 1000).coerceIn(1, targetDurationSeconds)
         lifecycleScope.launch {
+            val now = System.currentTimeMillis()
+            val ownerId = FirebaseScopeResolver.ownerId(this@TimerActivity)
             val record = SprintRecord(
                 parentGoalId = mainGoalId,
                 taskContent = sprintTask,
                 targetDurationSeconds = targetDurationSeconds,
                 actualDurationSeconds = actualSeconds,
-                createdAt = System.currentTimeMillis()
+                createdAt = now,
+                ownerUid = ownerId,
+                lastModified = now,
+                isSynced = false
             )
             withContext(Dispatchers.IO) {
                 SprintDatabaseProvider.getDatabase(this@TimerActivity)
@@ -163,6 +171,9 @@ class TimerActivity : AppCompatActivity() {
             }
             Toast.makeText(this@TimerActivity, R.string.toast_success_saved, Toast.LENGTH_SHORT)
                 .show()
+            if (AuthManager.isLoggedIn) {
+                runCatching { FirebaseSyncManager.pushLocalData(applicationContext) }
+            }
             val intent = Intent(this@TimerActivity, HomeActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }

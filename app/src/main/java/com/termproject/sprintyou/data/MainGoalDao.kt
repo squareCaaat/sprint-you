@@ -6,20 +6,19 @@ import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 interface MainGoalDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(goal: MainGoal): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(goals: List<MainGoal>)
+
     @Query(
         """
-        SELECT g.goal_id AS goal_id,
-               g.title AS title,
-               g.status AS status,
-               g.total_sprints AS total_sprints,
-               g.created_at AS created_at,
-               g.completed_at AS completed_at,
+        SELECT g.*,
                COUNT(s.sprint_id) AS completed_sprints
         FROM main_goals g
         LEFT JOIN sprint_records s ON g.goal_id = s.parent_goal_id
@@ -34,11 +33,34 @@ interface MainGoalDao {
     @Query("SELECT * FROM main_goals WHERE status = :status ORDER BY created_at DESC LIMIT 1")
     suspend fun getGoalByStatus(status: MainGoalStatus): MainGoal?
 
-    @Query("UPDATE main_goals SET status = :status, completed_at = :completedAt WHERE goal_id = :goalId")
-    suspend fun updateGoalStatus(goalId: Long, status: MainGoalStatus, completedAt: Long?)
+    @Query("SELECT * FROM main_goals ORDER BY created_at DESC")
+    suspend fun getAllGoals(): List<MainGoal>
 
-    @Query("UPDATE main_goals SET status = :newStatus WHERE status = :currentStatus")
-    suspend fun updateStatusFor(currentStatus: MainGoalStatus, newStatus: MainGoalStatus)
+    @Query("SELECT * FROM main_goals WHERE owner_uid = :ownerId ORDER BY created_at DESC")
+    suspend fun getGoalsByOwner(ownerId: String): List<MainGoal>
+
+    @Query("UPDATE main_goals SET owner_uid = :ownerUid WHERE owner_uid IS NULL")
+    suspend fun claimGoalsWithoutOwner(ownerUid: String)
+
+    @Query("UPDATE main_goals SET status = :status, completed_at = :completedAt, last_modified = :lastModified, is_synced = 0 WHERE goal_id = :goalId")
+    suspend fun updateGoalStatus(goalId: Long, status: MainGoalStatus, completedAt: Long?, lastModified: Long)
+
+    @Query("UPDATE main_goals SET status = :newStatus, last_modified = :lastModified, is_synced = 0 WHERE status = :currentStatus")
+    suspend fun updateStatusFor(currentStatus: MainGoalStatus, newStatus: MainGoalStatus, lastModified: Long)
+
+    @Query("UPDATE main_goals SET is_synced = :synced WHERE owner_uid = :ownerUid")
+    suspend fun markGoalsSynced(ownerUid: String, synced: Boolean)
+
+    @Query("DELETE FROM main_goals")
+    suspend fun clearAll()
+
+    @Transaction
+    suspend fun replaceAll(goals: List<MainGoal>) {
+        clearAll()
+        if (goals.isNotEmpty()) {
+            insertAll(goals)
+        }
+    }
 }
 
 data class GoalWithProgress(
