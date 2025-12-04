@@ -1,9 +1,12 @@
 package com.termproject.sprintyou.ui.history
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -13,7 +16,7 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import com.termproject.sprintyou.R
 import com.termproject.sprintyou.data.SprintDatabaseProvider
 import com.termproject.sprintyou.data.SprintHistoryItem
-import com.termproject.sprintyou.databinding.ActivityCalendarBinding
+import com.termproject.sprintyou.databinding.FragmentCalendarBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,36 +26,58 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class HistoryActivity : AppCompatActivity() {
+class CalendarFragment : Fragment() {
 
-    private lateinit var binding: ActivityCalendarBinding
+    private var _binding: FragmentCalendarBinding? = null
+    private val binding get() = _binding!!
     private val adapter = HistoryAdapter()
-    private val database by lazy { SprintDatabaseProvider.getDatabase(this) }
+    private val database by lazy { SprintDatabaseProvider.getDatabase(requireContext()) }
     private val zoneId: ZoneId = ZoneId.systemDefault()
     private var monthRecords: List<SprintHistoryItem> = emptyList()
     private var dotDecorator: SprintDotDecorator? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCalendarBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupRecycler()
         bindCalendar()
-        binding.btnBack.setOnClickListener { finish() }
     }
 
     override fun onResume() {
         super.onResume()
         val today = LocalDate.now()
         val todayCalendarDay = today.toCalendarDay()
-        binding.calendarView.setCurrentDate(todayCalendarDay)
-        binding.calendarView.selectedDate = todayCalendarDay
-        loadMonth(today)
+        
+        // Only set selection if not already selected (preserve state on tab switch if needed)
+        // For now, let's keep it simple and refresh to today/month on resume as before, 
+        // or check if calendar has selection.
+        if (binding.calendarView.selectedDate == null) {
+            binding.calendarView.setCurrentDate(todayCalendarDay)
+            binding.calendarView.selectedDate = todayCalendarDay
+            loadMonth(today)
+        } else {
+             // If we already have data, maybe don't reload? 
+             // But data might have changed. Let's reload based on currently visible month.
+             val currentMonth = binding.calendarView.currentDate.toLocalDate()
+             loadMonth(currentMonth)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupRecycler() {
-        binding.rvHistory.layoutManager = LinearLayoutManager(this)
+        binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
     }
 
@@ -73,13 +98,18 @@ class HistoryActivity : AppCompatActivity() {
         val startMillis = firstDay.atStartOfDay(zoneId).toInstant().toEpochMilli()
         val endMillis = lastDay.plusDays(1).atStartOfDay(zoneId).toInstant().minusMillis(1).toEpochMilli()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val records = withContext(Dispatchers.IO) {
                 database.sprintRecordDao().getBetween(startMillis, endMillis)
             }
             monthRecords = records
             updateDecorators(records)
+            
+            // If a date is selected, update list for that date. 
+            // If not, default logic from activity was: first day or selected.
             val selectedDate = binding.calendarView.selectedDate?.toLocalDate() ?: firstDay
+            // Ensure selectedDate is within the loaded month view? 
+            // The original logic just coerced it.
             showRecordsFor(selectedDate.coerceIn(firstDay, lastDay))
         }
     }
@@ -91,7 +121,7 @@ class HistoryActivity : AppCompatActivity() {
             .map { it.toCalendarDay() }
             .toSet()
 
-        val color = ContextCompat.getColor(this, R.color.secondary_blue)
+        val color = ContextCompat.getColor(requireContext(), R.color.secondary_blue)
         val decorator = SprintDotDecorator(dates, color)
         binding.calendarView.addDecorator(decorator)
         dotDecorator = decorator
@@ -136,3 +166,4 @@ class HistoryActivity : AppCompatActivity() {
             DateTimeFormatter.ofPattern("M월 d일 (E)", Locale.getDefault())
     }
 }
+
