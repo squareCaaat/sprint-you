@@ -22,20 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnSurface" />
 
-    <ImageButton
-        android:id="@+id/btn_history"
-        android:layout_width="@dimen/icon_touch_target"
-        android:layout_height="@dimen/icon_touch_target"
-        android:layout_marginTop="@dimen/spacing_xs"
-        android:layout_marginEnd="@dimen/spacing_xs"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/desc_history"
-        android:padding="@dimen/spacing_s"
-        android:src="@drawable/ic_history"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorOnSurface" />
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
