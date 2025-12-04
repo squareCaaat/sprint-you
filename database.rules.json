@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+				".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+
+        "goals": {
+          "$goalId": {
+            ".validate": "newData.hasChildren(['title','status','createdAt'])"
+          }
+        },
+        "sprints": {
+          "$sprintId": {
+            ".validate": "newData.hasChildren(['parentGoalId','taskContent','createdAt'])"
+          }
+        }
+      }
+    }
+  }
+}
